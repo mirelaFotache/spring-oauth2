@@ -22,7 +22,7 @@ public class AuthenticationService {
     public JWTTokenResponse generateJWTToken(String username, String password) {
         return userRepository.findByUsername(username)
                 .filter(user ->  passwordEncoder.matches(password, user.getPassword()))
-                .map(user -> new JWTTokenResponse(jwtTokenService.generateToken(username)))
+                .map(user -> new JWTTokenResponse(jwtTokenService.generateToken(user.getUsername(),user.getRoles())))
                 .orElseThrow(() ->  new OAuth2Exception("account.not.found"));
     }
 

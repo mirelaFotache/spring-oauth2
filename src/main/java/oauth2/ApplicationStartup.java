@@ -26,14 +26,26 @@ public class ApplicationStartup implements ApplicationListener<ApplicationReadyE
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
 
-        Optional<User> user = userRepository.findByUsername("admin");
-        if (!user.isPresent()) {
+        Optional<User> admin = userRepository.findByUsername("admin");
+        if (!admin.isPresent()) {
             User userNew = new User();
             userNew.setUsername("admin");
             userNew.setPassword(passwordEncoder.encode("admin"));
             userNew.setEmail("admin@gmail.com");
             List<Role> roles = new ArrayList<Role>();
             roles.add(Role.ROLE_ADMIN);
+            userNew.setRoles(roles);
+            userRepository.save(userNew);
+        }
+
+        Optional<User> user = userRepository.findByUsername("user");
+        if (!user.isPresent()) {
+            User userNew = new User();
+            userNew.setUsername("user");
+            userNew.setPassword(passwordEncoder.encode("user"));
+            userNew.setEmail("user@gmail.com");
+            List<Role> roles = new ArrayList<Role>();
+            roles.add(Role.ROLE_USER);
             userNew.setRoles(roles);
             userRepository.save(userNew);
         }

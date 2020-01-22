@@ -1,12 +1,18 @@
 package oauth2.auth.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import oauth2.user.model.Role;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenService {
@@ -21,12 +27,16 @@ public class JwtTokenService {
         this.expiration = expiration;
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, List<Role> roles) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority
+                (s.getAuthority())).collect(Collectors.toList()));
+
         final Date createdDate = new Date();
         final Date expirationDate = calculateExpirationDate(createdDate);
 
         return Jwts.builder()
-                .setClaims(new HashMap<>())
+                .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
