@@ -3,6 +3,7 @@ package oauth2.auth.service;
 import oauth2.exception.OAuth2Exception;
 import oauth2.auth.conmmunication.JWTTokenResponse;
 import oauth2.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class AuthenticationService {
     private JwtTokenService jwtTokenService;
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
     public AuthenticationService(UserRepository userRepository, JwtTokenService jwtTokenService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.jwtTokenService = jwtTokenService;

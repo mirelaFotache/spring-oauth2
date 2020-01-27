@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 8889
 
 spring:
   application:
@@ -26,8 +26,9 @@ spring:
         hbm2ddl:
           auto: update
 
-jwt:
-  secret: mySecret
-  expiration: 604800
-oauth:
+oauth-conf:
   language: FRENCH
+
+jwt:
+    secret: mySecret
+    expiration: 604800
