@@ -20,3 +20,10 @@ Using asymmetric keys:
                  .signWith(SignatureAlgorithm.RS512, getPrivateKey()) // Use asymmetric key. Algorithm used: RS512
                  .compact();
   - Provide an URL to retrieve token
+
+  NOTE:
+  - Call http://localhost:8889/auth_asym_key/certificate to download certificate
+  - Call POST to retrieve the token: http://localhost:8889/auth_sym_key/token
+  
+  Decode JWT token to see the content
+  https://jwt.io/

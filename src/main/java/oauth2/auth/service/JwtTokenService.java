@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.security.Key;
 import java.security.KeyStore;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +56,12 @@ public class JwtTokenService {
     }
 
     private Date calculateExpirationDate(Date createdDate) {
-        return new Date(createdDate.getTime() + 604800);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return formatter.parse("2400-12-31");
+        }catch(Exception e){}
+        //return new Date(createdDate.getTime() + 604800);
+        return null;
     }
 
     private Key getPrivateKey() {
