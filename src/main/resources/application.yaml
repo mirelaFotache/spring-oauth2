@@ -32,3 +32,13 @@ oauth-conf:
 jwt:
     secret: mySecret
     expiration: 604800
+
+certificate:
+  alias: jwtcert
+  name: data/keystore.jks
+  nameAndPath: src/main/resources/data/keystore.jks
+  dn: CN=cn, O=o, L=L, ST=il, C= c
+  algorithm: RSA
+  bits: 1024
+  signatureAlgorithm: SHA256WithRSAEncryption
+  secureRandom: SHA1PRNG
