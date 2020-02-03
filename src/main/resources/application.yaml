@@ -42,3 +42,5 @@ certificate:
   bits: 1024
   signatureAlgorithm: SHA256WithRSAEncryption
   secureRandom: SHA1PRNG
+
+server.servlet.context-path: /oauth
