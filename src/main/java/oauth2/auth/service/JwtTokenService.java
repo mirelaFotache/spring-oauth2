@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import oauth2.exception.OAuth2Exception;
 import oauth2.user.model.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenService {
-
+    private static Logger log = LoggerFactory.getLogger(JwtTokenService.class);
     @Autowired
     private MessageSource messageSource;
 
@@ -40,8 +42,8 @@ public class JwtTokenService {
     @Value("${certificate.alias}")
     private String certificateAlias;
 
-    @Value("${certificate.name}")
-    private String certificateName;
+    @Value("${certificate.nameAndPath}")
+    private String nameAndPath;
 
 
     public String generateToken(String username, List<Role> roles) {
@@ -76,9 +78,9 @@ public class JwtTokenService {
         try {
             ClassLoader classLoader = JwtTokenService.class.getClassLoader();
 
-            final URL resource = classLoader.getResource(certificateName);
-            if (resource != null) {
-                File file = new File(resource.getFile());
+            File file = new File(new File("").getAbsolutePath(),nameAndPath);
+            log.info(">>>>>>>>>>>>>>> file absolute path: <<< "+file.getAbsolutePath());
+            if (file.canRead()) {
                 KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
                 keystore.load(new FileInputStream(file), secret.toCharArray());
                 /*Certificate cert = keystore.getCertificate("jwtkey");

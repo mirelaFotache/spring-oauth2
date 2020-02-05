@@ -4,6 +4,8 @@ import oauth2.exception.OAuth2Exception;
 import org.bouncycastle.jce.X509Principal;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -20,6 +22,7 @@ import java.util.Date;
 
 @Component
 public class CertificateService {
+    private static Logger log = LoggerFactory.getLogger(JwtTokenService.class);
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -30,9 +33,6 @@ public class CertificateService {
 
     @Value("${certificate.alias}")
     private String certificateAlias;
-
-    @Value("${certificate.name}")
-    private String certificateName;
 
     @Value("${certificate.nameAndPath}")
     private String nameAndPath;
@@ -62,7 +62,7 @@ public class CertificateService {
      */
     public File getCertificate() {
         final File file = loadFile();
-        if (file != null) {
+        if (file.canRead()) {
             logCertificatePrivateKey(file);
             return file;
         } else {
@@ -72,19 +72,16 @@ public class CertificateService {
     }
 
     private File loadFile() {
-        ClassLoader classLoader = AuthenticationService.class.getClassLoader();
-        final URL resource = classLoader.getResource(certificateName);
-        if (resource != null) {
-            return new File(resource.getFile());
-        }
-        return null;
+        File file = new File(new File("").getAbsolutePath(),nameAndPath);
+        log.info(">>>>>>>>>>>>>>> file absolute path: <<< "+file.getAbsolutePath());
+        return file;
     }
 
     private void logCertificatePrivateKey(File file) {
         try {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(new FileInputStream(file), secret.toCharArray());
-            /*Certificate cert = keystore.getCertificate("jwtkey");
+            /*Certificate cert = keystore.getCertificate("jwtcert");
             PublicKey publicKey = cert.getPublicKey();*/
             System.out.println(keystore.getKey(certificateAlias, secret.toCharArray()).toString());
         } catch (Exception e) {
@@ -118,7 +115,8 @@ public class CertificateService {
         KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(null, null);
         keyStore.setKeyEntry(certificateAlias, key, secret.toCharArray(), new java.security.cert.Certificate[]{cert});
-        File file = new File(".", nameAndPath);
+        File file = new File(new File("").getAbsolutePath(),nameAndPath);
+        log.info(">>>>>>>>>>>>>>> file absolute path: <<< "+file.getAbsolutePath());
         keyStore.store(new FileOutputStream(file), secret.toCharArray());
     }
 }

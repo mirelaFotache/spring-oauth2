@@ -3,10 +3,10 @@ server:
 
 spring:
   application:
-    name: authentication-service
+    name: oauth
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=oauthserver
+    url: jdbc:postgresql://172.18.0.24:5432/postgres?currentSchema=oauthserver
     username: postgres
     password: admin
   jpa:
@@ -35,8 +35,7 @@ jwt:
 
 certificate:
   alias: jwtcert
-  name: data/keystore.jks
-  nameAndPath: src/main/resources/data/keystore.jks
+  nameAndPath: keystore.jks
   dn: CN=cn, O=o, L=L, ST=il, C= c
   algorithm: RSA
   bits: 1024
@@ -44,3 +43,10 @@ certificate:
   secureRandom: SHA1PRNG
 
 server.servlet.context-path: /oauth
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://172.18.0.22:8761/eureka}
