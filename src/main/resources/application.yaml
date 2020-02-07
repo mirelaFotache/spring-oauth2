@@ -6,7 +6,7 @@ spring:
     name: oauth
 
   datasource:
-    url: jdbc:postgresql://172.18.0.24:5432/postgres?currentSchema=oauthserver
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=oauthserver
     username: postgres
     password: admin
   jpa:
@@ -22,9 +22,10 @@ spring:
             non_contextual_creation: true
 
         # Hibernate ddl auto (create, create-drop, validate, update)
-        ddl-auto: update
+        ddl-auto: none
         hbm2ddl:
-          auto: update
+          auto: create
+        generate-ddl: true
 
 oauth-conf:
   language: FRENCH
@@ -45,8 +46,8 @@ certificate:
 server.servlet.context-path: /oauth
 
 eureka:
-  instance:
-    prefer-ip-address: true
   client:
+    register-with-eureka: true
+    fetch-registry: false
     serviceUrl:
-      defaultZone: ${EUREKA_URI:http://172.18.0.22:8761/eureka}
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
